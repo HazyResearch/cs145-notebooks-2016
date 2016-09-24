@@ -62,7 +62,7 @@ git pull
 ```
 
 ### Running stuff
-In the directory where the relevant course materials are (if you followed the above step, this will be in the `cs145-notebooks` directory), run:
+In the directory where the relevant course materials are (if you followed the above step, this will be in the `cs145-notebooks-2016` directory), run:
 
 ```
 jupyter notebook
