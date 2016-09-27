@@ -6,7 +6,7 @@
 We recommend that you install via Anaconda:
 
 1. Download & install Anaconda for Python 2.7 [here](https://www.continuum.io/downloads)
-2. Run `jupyter notebook` to confirm that the installation worked!
+2. Restart your terminal and run `jupyter notebook` to confirm that the installation worked!
 
 
 ### Installation via `pip`
