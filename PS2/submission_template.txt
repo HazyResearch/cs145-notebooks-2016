@@ -2,7 +2,7 @@
 <pset>
 
     <!--
-        CS 145, FALL 2015
+        CS 145, FALL 2016
         PROBLEM SET 2 SUBMISSION TEMPLATE
 
         Please copy and paste your SQL queries (and potentially Python code
