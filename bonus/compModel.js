@@ -17,7 +17,7 @@ var getPagesLog = function() {
 getPagesLog();
 
 // Set some globals
-var pageWidth = 10 + 20*pageSize; // NOTE: this is hard-coding the font-width!!!
+var pageWidth = 50 + 20*pageSize; // NOTE: this is hard-coding the font-width!!!
 var pageHeight = 30;
 var pagePadding = 5;
 var frameWidth = pageWidth + 2*pagePadding;
@@ -181,12 +181,11 @@ var getElement = function(elementType, filterFn) {
 }
 
 var pageText = function(fid, pid, data) {
-  //var s = fid + '/' + pid + ' : ';
-  var s ='';
+  var s = fid + '/' + pid + ' : ';
   for (var i=0; i < data.length; i++) {
     s += (data[i] != null) ? data[i] : '_';
     if (i < data.length - 1) {
-      s += ',';
+      s += ', ';
     }
   }
   return s;
