@@ -3,6 +3,7 @@ from copy import copy
 import numpy as np
 from IPython.core.display import display_html, HTML, display_javascript, Javascript
 import json
+import random
 
 class BufferMemoryException(Exception):
   pass
@@ -22,6 +23,7 @@ class Page:
       self._data = [None]*size
     else:
       self.set_all(data)
+    self._i = 0
 
   def size(self, count_empty=False):
     return len(filter(lambda e : e or count_empty, self._data))
