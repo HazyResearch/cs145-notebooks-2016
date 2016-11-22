@@ -502,3 +502,14 @@ def js_file_with_configs(fpath, configs):
       js += 'var %s = %s\n' % (k,v)
   js += open(fpath, 'rb').read()
   return js
+
+def new_rand_file(b, r, l, sorted=False):
+  vals = random.sample(range(r), l)
+  if sorted:
+    vals.sort()
+  fid = b.new_file()
+  fw = FileWriter(b, fid)
+  for v in vals:
+    fw.append(v)
+  fw.close()
+  return fid
