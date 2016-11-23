@@ -34,6 +34,20 @@ class Page:
     else:
       raise IndexError
 
+  def pop(self):
+    # TODO FINISH THIS!!!
+    x = self._data[self._i]
+    self._data[self._i] = None
+    self._i += 1
+    return x
+
+  def peek(self):
+    # TODO: Finish this!
+    return self._data[self._i]
+
+  def is_empty(self):
+    return len([d for d in self._data if d is not None]) == 0
+
   def set(self, i, val):
     if i < self.size:
       self._data[i] = val
@@ -54,6 +68,13 @@ class Page:
 
   def __iter__(self):
     return iter(self._data)
+
+  def next(self):
+    if self._i < self.size:
+      self._i += 1
+      return self.get(self._i-1)
+    else:
+      raise StopIteration()
 
   def __str__(self):
     return "<Page(file_id=%s, id=%s, data=%s)>" % (self.file_id, self.id, self.data)
@@ -174,7 +195,7 @@ class FileWriter:
       self.pages_written += 1
 
 class Buffer:
-  def __init__(self, page_size=4, buffer_size=4, buffer_queue_indicator=None):
+  def __init__(self, page_size=4, buffer_size=4, sequential_cost=1.0, buffer_queue_indicator=None):
     self.buffer_size = buffer_size
     self.page_size = page_size
 
@@ -188,6 +209,10 @@ class Buffer:
 
     # The disk is a list of files, which are lists of pages
     self._disk = []
+
+    # Keep track of the last read / write fid,pid for sequential discount
+    self._last_id = None
+    self._sequential_cost = sequential_cost
 
     # The log records read & write operations between disk, buffer and main (name??)
     self._io_count = {
@@ -299,12 +324,18 @@ class Buffer:
       # If not already in buffer, read from disk to buffer
       # Find an empty slot in the buffer and insert copy of page from disk
       if id not in self._buffer_map:
-        self._io_count['diskReads'] += 1
+        if self._last_id == (id[0], id[1]-1):
+          self._io_count['diskReads'] += self._sequential_cost
+        else:
+          self._io_count['diskReads'] += 1
         i = self.get_empty_buffer_slot()
         page = self._disk[fid][pid].copy()
         self._buffer[i] = page
         self._buffer_map[id] = i
         self._update_log('READ FROM DISK', page, i, 'DISK', 'BUFFER', True)
+
+      # log for sequential discounting
+      self._last_id = id
 
       # Perform & record read *from* buffer, adjust buffer use order
       i = self._buffer_map[id]
@@ -381,12 +412,18 @@ class Buffer:
 
     # Flush to disk: remove from buffer, buffer map, place in disk
     else:
-      self._io_count['diskWrites'] += 1
+      if self._last_id == (id[0], id[1]-1):
+        self._io_count['diskWrites'] += self._sequential_cost
+      else:
+        self._io_count['diskWrites'] += 1
       self._update_log('FLUSH TO DISK', page, self._buffer_map[id], 'BUFFER', 'DISK', False)
       i = self._buffer_map.pop(id)
       self._disk[fid][pid] = self._buffer[i]
       self._buffer[i] = None
       self.update_buffer_queue_indicator(remove_idx=i)
+
+      # log for sequential discounting
+      self._last_id = id
 
   def get_file(self, fid):
     """
