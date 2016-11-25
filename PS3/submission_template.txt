@@ -5,9 +5,7 @@
         CS 145, FALL 2016
         PROBLEM SET 3 SUBMISSION TEMPLATE
 
-        Please copy and paste your answers into the appropriate spots below. Make sure to include the 
-        entire answer -- i.e. include the whole function if the question asks for you to implement a function.
-        Please don't change variable + function names!
+        Please copy and paste your answers (potentially Python code) into the appropriate spots below.
 
         DO NOT DELETE THE <![CDATA[ ... ]]> LINES IN EACH <answer> TAG!
         Doing so will break the autograder. To avoid accidentally breaking
