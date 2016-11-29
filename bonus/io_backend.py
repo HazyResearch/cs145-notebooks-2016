@@ -278,6 +278,7 @@ class Buffer:
     if type(idx) == int:
       if idx >= self.buffer_size:
         raise BufferMemoryException
+      return self._buffer[idx], idx
     else:
       if idx == 'LRU':
         j = 0
